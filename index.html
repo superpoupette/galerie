@@ -9,27 +9,25 @@ var viewer = OpenSeadragon({
 // ============================
 // OUTIL RECTANGLE PRO
 // ============================
-
 let startPoint = null;
-
 let overlay = document.createElement("div");
+
 overlay.style.position = "absolute";
 overlay.style.border = "2px solid red";
 overlay.style.pointerEvents = "none";
 overlay.style.display = "none";
+document.body.appendChild(overlay); // on l’ajoute au body
 
-viewer.canvas.appendChild(overlay);
-
-// Début sélection
+// début sélection
 viewer.addHandler('canvas-press', function(event){
+    if(!event.position) return;
     startPoint = viewer.viewport.pointFromPixel(event.position);
     overlay.style.display = "block";
 });
 
-// Dessin rectangle
+// dessin rectangle
 viewer.addHandler('canvas-drag', function(event){
-
-    if(!startPoint) return;
+    if(!startPoint || !event.position) return;
 
     let current = viewer.viewport.pointFromPixel(event.position);
 
@@ -51,10 +49,9 @@ viewer.addHandler('canvas-drag', function(event){
     overlay.style.height = pixelSize.y + "px";
 });
 
-// Fin sélection → calcul
+// fin sélection → calcul coordonnées
 viewer.addHandler('canvas-release', function(event){
-
-    if(!startPoint) return;
+    if(!startPoint || !event.position) return;
 
     let endPoint = viewer.viewport.pointFromPixel(event.position);
 
@@ -86,4 +83,5 @@ viewer.addHandler('canvas-release', function(event){
     startPoint = null;
 });
 </script>
+
 
