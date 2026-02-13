@@ -1,87 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Zoom Infini Test</title>
+    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+    <style>
+        html, body { margin:0; padding:0; height:100%; }
+        #viewer { width: 100%; height: 100vh; background-color: black; }
+    </style>
+</head>
+<body>
+<div id="viewer"></div>
+
 <script>
-var viewer = OpenSeadragon({
-    id: "viewer",
-    prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
-    tileSources: "sortie.dzi",
-    showNavigator: false
-});
+    var viewer = OpenSeadragon({
+        id: "viewer",
+        prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+        tileSources: "sortie.dzi",
+        showNavigator: false
+    });
 
-// ============================
-// OUTIL RECTANGLE PRO
-// ============================
-let startPoint = null;
-let overlay = document.createElement("div");
+    let firstPoint = null;
 
-overlay.style.position = "absolute";
-overlay.style.border = "2px solid red";
-overlay.style.pointerEvents = "none";
-overlay.style.display = "none";
-document.body.appendChild(overlay); // on l’ajoute au body
+    viewer.addHandler('canvas-click', function(event){
+        if(!event.position) return;
 
-// début sélection
-viewer.addHandler('canvas-press', function(event){
-    if(!event.position) return;
-    startPoint = viewer.viewport.pointFromPixel(event.position);
-    overlay.style.display = "block";
-});
+        let viewportPoint = viewer.viewport.pointFromPixel(event.position);
+        let img = viewer.world.getItemAt(0);
+        let imagePoint = viewer.viewport.viewportToImageCoordinates(viewportPoint);
+        let imgSize = img.getContentSize();
 
-// dessin rectangle
-viewer.addHandler('canvas-drag', function(event){
-    if(!startPoint || !event.position) return;
+        let normX = imagePoint.x / imgSize.x;
+        let normY = imagePoint.y / imgSize.y;
 
-    let current = viewer.viewport.pointFromPixel(event.position);
+        if(!firstPoint){
+            firstPoint = { x: normX, y: normY };
+            console.log("Coin haut gauche enregistré :", firstPoint);
+        } else {
+            let secondPoint = { x: normX, y: normY };
+            let x = Math.min(firstPoint.x, secondPoint.x);
+            let y = Math.min(firstPoint.y, secondPoint.y);
+            let width = Math.abs(secondPoint.x - firstPoint.x);
+            let height = Math.abs(secondPoint.y - firstPoint.y);
 
-    let rect = new OpenSeadragon.Rect(
-        Math.min(startPoint.x, current.x),
-        Math.min(startPoint.y, current.y),
-        Math.abs(startPoint.x - current.x),
-        Math.abs(startPoint.y - current.y)
-    );
+            console.log("==== DETAIL COORDS PRÊT À COLLER ====");
+            console.log(`x: ${x}`);
+            console.log(`y: ${y}`);
+            console.log(`width: ${width}`);
+            console.log(`height: ${height}`);
 
-    let pixelRect = viewer.viewport.pixelFromPoint(rect.getTopLeft(), true);
-    let pixelSize = viewer.viewport.deltaPixelsFromPoints(
-        new OpenSeadragon.Point(rect.width, rect.height), true
-    );
-
-    overlay.style.left = pixelRect.x + "px";
-    overlay.style.top = pixelRect.y + "px";
-    overlay.style.width = pixelSize.x + "px";
-    overlay.style.height = pixelSize.y + "px";
-});
-
-// fin sélection → calcul coordonnées
-viewer.addHandler('canvas-release', function(event){
-    if(!startPoint || !event.position) return;
-
-    let endPoint = viewer.viewport.pointFromPixel(event.position);
-
-    let rect = new OpenSeadragon.Rect(
-        Math.min(startPoint.x, endPoint.x),
-        Math.min(startPoint.y, endPoint.y),
-        Math.abs(startPoint.x - endPoint.x),
-        Math.abs(startPoint.y - endPoint.y)
-    );
-
-    let img = viewer.world.getItemAt(0);
-    let size = img.getContentSize();
-
-    let topLeft = viewer.viewport.viewportToImageCoordinates(rect.getTopLeft());
-    let bottomRight = viewer.viewport.viewportToImageCoordinates(rect.getBottomRight());
-
-    let x = topLeft.x / size.x;
-    let y = topLeft.y / size.y;
-    let w = (bottomRight.x - topLeft.x) / size.x;
-    let h = (bottomRight.y - topLeft.y) / size.y;
-
-    console.log("==== DETAIL COORDS ====");
-    console.log(`x: ${x}`);
-    console.log(`y: ${y}`);
-    console.log(`width: ${w}`);
-    console.log(`height: ${h}`);
-
-    overlay.style.display = "none";
-    startPoint = null;
-});
+            // Réinitialise pour une nouvelle sélection
+            firstPoint = null;
+        }
+    });
 </script>
+</body>
+</html>
+
 
 
