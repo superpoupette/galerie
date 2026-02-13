@@ -13,26 +13,29 @@
     <div id="viewer"></div>
 
     <script>
-	var detailCoords = {
-   	 x: 0.36,                 // coin gauche de la sélection
-    	y: 0.454,                // coin supérieur
-    	width: 2000 / 5553,      // ≈ 0.360
-    	height: 1568 / 4498      // ≈ 0.349
-};
+        // Coordonnées normalisées de la zone originale
+        var detailCoords = {
+            x: 1998 / 5553,   // coin gauche de la sélection
+            y: 2044 / 4498,   // coin supérieur
+            width: 329 / 5553,  // largeur de la sélection originale
+            height: 203 / 4498  // hauteur de la sélection originale
+        };
 
+        // Créer le viewer OpenSeadragon
         var viewer = OpenSeadragon({
             id: "viewer",
             prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
-            tileSources: "sortie.dzi", // image principale
+            tileSources: "sortie.dzi",  // image principale
             showNavigator: true
         });
 
-        // Ajouter la zone détaillée comme TiledImage
+        // Ajouter la zone détaillée (niv2) exactement sur la sélection originale
         viewer.addTiledImage({
-            tileSource: "niv2.dzi", // image de détail
+            tileSource: "niv2.dzi",       // image de détail haute résolution
             x: detailCoords.x,
             y: detailCoords.y,
             width: detailCoords.width,
+            height: detailCoords.height,
             success: function() {
                 console.log("Zone détaillée ajoutée !");
             }
@@ -41,4 +44,3 @@
     </script>
 </body>
 </html>
-
