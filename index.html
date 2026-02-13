@@ -26,7 +26,11 @@
             id: "viewer",
             prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
             tileSources: "sortie.dzi",  // image principale
-            showNavigator: true
+            showNavigator: truemaxZoomPixelRatio: 20,
+            minZoomLevel: 0.5,
+            defaultZoomLevel: 1,
+            visibilityRatio: 1,
+            constrainDuringPan: false
         });
 
         // Ajouter la zone détaillée (niv2) exactement sur la sélection originale
