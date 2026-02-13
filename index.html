@@ -10,41 +10,39 @@
     </style>
 </head>
 <body>
-    <div id="viewer"></div>
+<div id="viewer"></div>
 
-    <script>
-        // Coordonnées normalisées de la zone originale
-        var detailCoords = {
-            x: 1900 / 5553,   // coin gauche de la sélection
-            y: 2000 / 4498,   // coin supérieur
-            width: 329 / 5553,  // largeur de la sélection originale
-            height: 203 / 4498  // hauteur de la sélection originale
-        };
+<script>
+    var detailCoords = {
+        x: 1800 / 5553,
+        y: 0 / 4498,
+        width: 329 / 5553,
+        height: 203 / 4498
+    };
 
-        // Créer le viewer OpenSeadragon
-        var viewer = OpenSeadragon({
-            id: "viewer",
-            prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
-            tileSources: "sortie.dzi",  // image principale
-            showNavigator: truemaxZoomPixelRatio: 20,
-            minZoomLevel: 0.5,
-            defaultZoomLevel: 1,
-            visibilityRatio: 1,
-            constrainDuringPan: false
-        });
+    var viewer = OpenSeadragon({
+        id: "viewer",
+        prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+        tileSources: "sortie.dzi",
+        showNavigator: true,
 
-        // Ajouter la zone détaillée (niv2) exactement sur la sélection originale
-        viewer.addTiledImage({
-            tileSource: "niv2.dzi",       // image de détail haute résolution
-            x: detailCoords.x,
-            y: detailCoords.y,
-            width: detailCoords.width,
-            height: detailCoords.height,
-            success: function() {
-                console.log("Zone détaillée ajoutée !");
-            }
-        });
+        maxZoomPixelRatio: 20,
+        minZoomLevel: 0.5,
+        defaultZoomLevel: 1,
+        visibilityRatio: 1,
+        constrainDuringPan: false
+    });
 
-    </script>
+    viewer.addTiledImage({
+        tileSource: "niv2.dzi",
+        x: detailCoords.x,
+        y: detailCoords.y,
+        width: detailCoords.width,
+        height: detailCoords.height,
+        success: function() {
+            console.log("Zone détaillée ajoutée !");
+        }
+    });
+</script>
 </body>
 </html>
