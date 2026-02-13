@@ -13,46 +13,73 @@
 <div id="viewer"></div>
 
 <script>
-    var viewer = OpenSeadragon({
-        id: "viewer",
-        prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
-        tileSources: "sortie.dzi",
-        showNavigator: false
-    });
+var viewer = OpenSeadragon({
+    id: "viewer",
+    prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+    tileSources: "sortie.dzi",
+    showNavigator: false
+});
 
-    let firstPoint = null;
+let firstPoint = null;
 
-    viewer.addHandler('canvas-click', function(event){
-        if(!event.position) return;
+viewer.addHandler('canvas-click', function(event){
+    if(!event.position) return;
 
-        let viewportPoint = viewer.viewport.pointFromPixel(event.position);
-        let img = viewer.world.getItemAt(0);
-        let imagePoint = viewer.viewport.viewportToImageCoordinates(viewportPoint);
-        let imgSize = img.getContentSize();
+    let viewportPoint = viewer.viewport.pointFromPixel(event.position);
+    let img = viewer.world.getItemAt(0);
+    let imagePoint = viewer.viewport.viewportToImageCoordinates(viewportPoint);
+    let imgSize = img.getContentSize();
 
-        let normX = imagePoint.x / imgSize.x;
-        let normY = imagePoint.y / imgSize.y;
+    let normX = imagePoint.x / imgSize.x;
+    let normY = imagePoint.y / imgSize.y;
 
-        if(!firstPoint){
-            firstPoint = { x: normX, y: normY };
-            console.log("Coin haut gauche enregistré :", firstPoint);
+    if(!firstPoint){
+        firstPoint = { x: normX, y: normY };
+        console.log("Coin haut gauche enregistré :", firstPoint);
+    } else {
+        let secondPoint = { x: normX, y: normY };
+        let x = Math.min(firstPoint.x, secondPoint.x);
+        let y = Math.min(firstPoint.y, secondPoint.y);
+        let width = Math.abs(secondPoint.x - firstPoint.x);
+        let height = Math.abs(secondPoint.y - firstPoint.y);
+
+        console.log("==== DETAIL COORDS PRÊT À COLLER ====");
+        console.log(`x: ${x}`);
+        console.log(`y: ${y}`);
+        console.log(`width: ${width}`);
+        console.log(`height: ${height}`);
+
+        // Création d’un canvas temporaire pour la capture
+        let canvas = document.createElement("canvas");
+        canvas.width = width * imgSize.x;
+        canvas.height = height * imgSize.y;
+        let ctx = canvas.getContext("2d");
+
+        let imgElement = img.source['tileUrl'] ? new Image() : null;
+        if(imgElement){
+            imgElement.onload = function(){
+                ctx.drawImage(
+                    imgElement,
+                    x * imgSize.x, y * imgSize.y,
+                    width * imgSize.x, height * imgSize.y,
+                    0, 0,
+                    width * imgSize.x, height * imgSize.y
+                );
+                // Création du lien de téléchargement
+                let link = document.createElement('a');
+                link.download = "zone_selection.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            };
+            imgElement.crossOrigin = "Anonymous";
+            imgElement.src = img.source['tileUrl'];
         } else {
-            let secondPoint = { x: normX, y: normY };
-            let x = Math.min(firstPoint.x, secondPoint.x);
-            let y = Math.min(firstPoint.y, secondPoint.y);
-            let width = Math.abs(secondPoint.x - firstPoint.x);
-            let height = Math.abs(secondPoint.y - firstPoint.y);
-
-            console.log("==== DETAIL COORDS PRÊT À COLLER ====");
-            console.log(`x: ${x}`);
-            console.log(`y: ${y}`);
-            console.log(`width: ${width}`);
-            console.log(`height: ${height}`);
-
-            // Réinitialise pour une nouvelle sélection
-            firstPoint = null;
+            alert("Impossible de capturer : image source non disponible directement.");
         }
-    });
+
+        firstPoint = null; // reset
+    }
+});
 </script>
 </body>
 </html>
