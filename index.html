@@ -56,16 +56,16 @@ viewer.addHandler('open', function(){
     // Tuile 2
     viewer.addTiledImage({
         tileSource: "croquis1.dzi",
-        x: 0,
-        y: 0,
-        width: 1,
+        x: 0.4372275814493661, 
+        y: 0.8375559286446002, 
+        width: 0.16669895742216728, 
 
         opacity: 1,
-        index: 999,
-        preload: true,
 
-        success: function(event){
-            croquisTile = event.item;
+        minZoomImageRatio: 0.15,
+        preload: true,
+        immediateRender: true,
+        blendTime: 0.5
         }
     });
 
