@@ -32,37 +32,51 @@ var viewer = OpenSeadragon({
     showNavigator: false
 });
 
-let detailImage = null;
+let charlieTile = null;
+let croquisTile = null;
 
-// Ajouter la tuile HD
+// Ajout des tuiles
 viewer.addHandler('open', function(){
 
+    // Tuile 1
     viewer.addTiledImage({
         tileSource: "charlie1.dzi",
-        x: 0.2891011294986858, 
+        x: 0.2891011294986858,
         y: 0.3041,
-        width: 0.01957575572620729 ,
+        width: 0.01957575572620729,
         height: 0.022303030672940538,
         opacity: 0,
         preload: true,
 
         success: function(event){
-            detailImage = event.item;
+            charlieTile = event.item;
+        }
+    });
+
+    // ⭐ Tuile 2
+    viewer.addTiledImage({
+        tileSource: "croquis1.dzi",
+        x: 0.4372275814493661,
+        y: 0.8375559286446002,
+        width: 0.16669895742216728,
+        height: 0.14485691959151004,
+        opacity: 0,
+        preload: true,
+
+        success: function(event){
+            croquisTile = event.item;
         }
     });
 
 });
 
-// Fade progressif
+// Fade progressif pour les deux
 viewer.addHandler('animation', function(){
-
-    if(!detailImage) return;
 
     let zoom = viewer.viewport.getZoom(true);
 
-    // ⭐ Apparition plus tôt
-    let startFade = 1.6;  // début transition
-    let endFade   = 2.1;  // fin transition
+    let startFade = 1.6;
+    let endFade   = 2.1;
 
     let opacity;
 
@@ -73,16 +87,17 @@ viewer.addHandler('animation', function(){
         opacity = 1;
     }
     else{
-        // interpolation douce
         opacity = (zoom - startFade) / (endFade - startFade);
     }
 
-    detailImage.setOpacity(opacity);
+    if(charlieTile) charlieTile.setOpacity(opacity);
+    if(croquisTile) croquisTile.setOpacity(opacity);
 
 });
 </script>
 
 </body>
 </html>
+
 
 
