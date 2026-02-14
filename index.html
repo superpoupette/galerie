@@ -34,16 +34,14 @@ var viewer = OpenSeadragon({
 
 let detailImage = null;
 
-// Ajoute la tuile HD
+// Ajouter la tuile HD
 viewer.addHandler('open', function(){
 
     viewer.addTiledImage({
         tileSource: "niv1.1.dzi",
-
         x: 0.1825774438521488,
         y: 0.38635,
         width: 0.04332902059396895,
-
         opacity: 0,
         preload: true,
 
@@ -54,21 +52,31 @@ viewer.addHandler('open', function(){
 
 });
 
-// Affichage selon le zoom
+// Fade progressif
 viewer.addHandler('animation', function(){
 
     if(!detailImage) return;
 
     let zoom = viewer.viewport.getZoom(true);
 
-    // 🔧 Ajuste cette valeur si besoin
-    let threshold = 2.2;
+    // ⭐ Apparition plus tôt
+    let startFade = 1.6;  // début transition
+    let endFade   = 2.1;  // fin transition
 
-    if(zoom > threshold){
-        detailImage.setOpacity(1);
-    } else {
-        detailImage.setOpacity(0);
+    let opacity;
+
+    if(zoom <= startFade){
+        opacity = 0;
     }
+    else if(zoom >= endFade){
+        opacity = 1;
+    }
+    else{
+        // interpolation douce
+        opacity = (zoom - startFade) / (endFade - startFade);
+    }
+
+    detailImage.setOpacity(opacity);
 
 });
 </script>
