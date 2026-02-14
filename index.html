@@ -30,7 +30,23 @@ var viewer = OpenSeadragon({
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
     tileSources: "niv0.dzi"
 });
+
+// Quand l'image principale est chargée → on ajoute la tuile détaillée
+viewer.addHandler('open', function(){
+
+    viewer.addTiledImage({
+        tileSource: "niv1.1.dzi",
+
+        x: 0.1825774438521488,
+        y: 0.47681327432813225,
+
+        width: 0.04332902059396895,
+        height: 0.05295282520633571
+    });
+
+});
 </script>
 
 </body>
 </html>
+
