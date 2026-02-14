@@ -2,47 +2,35 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Zoom Infini Test</title>
+    <title>Viewer</title>
+
     <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+
     <style>
-        html, body { margin:0; padding:0; height:100%; }
-        #viewer { width: 100%; height: 100vh; background-color: black; }
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100vh;
+            background: black;
+        }
     </style>
 </head>
+
 <body>
+
 <div id="viewer"></div>
 
 <script>
-    var detailCoords = {
-        x: 0.3606560470654999,
-        y: 0.4562437546268966,
-        width: 0.04180105332472833,
-        height: 0.04096096530246468
-    };
-
-    var viewer = OpenSeadragon({
-        id: "viewer",
-        prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
-        tileSources: "sortie.dzi",
-        showNavigator: false,
-
-        maxZoomPixelRatio: 20,
-        minZoomLevel: 0.5,
-        defaultZoomLevel: 1,
-        visibilityRatio: 1,
-        constrainDuringPan: false
-    });
-
-    viewer.addTiledImage({
-        tileSource: "niv1.dzi",
-        x: detailCoords.x,
-        y: detailCoords.y,
-        width: detailCoords.width,
-        height: detailCoords.height,
-        success: function() {
-            console.log("Zone détaillée ajoutée !");
-        }
-    });
+var viewer = OpenSeadragon({
+    id: "viewer",
+    prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+    tileSources: "niv0.dzi"
+});
 </script>
+
 </body>
 </html>
