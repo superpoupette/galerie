@@ -1,29 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Viewer</title>
-
-    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
-
-    <style>
-        html, body {
-            margin: 0;
-            height: 100%;
-        }
-
-        #viewer {
-            width: 100%;
-            height: 100vh;
-            background: black;
-        }
-    </style>
-</head>
-
-<body>
-
-<div id="viewer"></div>
-
 <script>
 var viewer = OpenSeadragon({
     id: "viewer",
@@ -38,7 +12,6 @@ let croquisTile = null;
 // Ajout des tuiles
 viewer.addHandler('open', function(){
 
-    // Tuile 1
     viewer.addTiledImage({
         tileSource: "charlie1.dzi",
         x: 0.2891011294986858,
@@ -53,25 +26,27 @@ viewer.addHandler('open', function(){
         }
     });
 
-    // Tuile 2
     viewer.addTiledImage({
         tileSource: "croquis1.dzi",
-        x: 0.4372275814493661, 
-        y: 0.8375559286446002, 
-        width: 0.16669895742216728, 
+        x: 0.4372275814493661,
+        y: 0.8375559286446002,
+        width: 0.16669895742216728,
+        height: 0.14485691959151004,
 
-        opacity: 1,
-
-        minZoomImageRatio: 0.15,
+        opacity: 0,
         preload: true,
         immediateRender: true,
-        blendTime: 0.5
+        blendTime: 0.5,
+
+        success: function(event){
+            croquisTile = event.item;
         }
     });
 
 });
 
-// Fade progressif pour les deux
+
+// Fade progressif
 viewer.addHandler('animation', function(){
 
     let zoom = viewer.viewport.getZoom(true);
@@ -97,8 +72,6 @@ viewer.addHandler('animation', function(){
 });
 </script>
 
-</body>
-</html>
 
 
 
