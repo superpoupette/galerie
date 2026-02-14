@@ -28,23 +28,52 @@
 var viewer = OpenSeadragon({
     id: "viewer",
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
-    tileSources: "niv0.dzi"
+    tileSources: "niv0.dzi",
+    showNavigator: false
 });
 
+let detailImage = null;
 
-// Quand l'image principale est chargée → on ajoute la tuile détaillée
+// Ajoute la tuile HD
 viewer.addHandler('open', function(){
 
     viewer.addTiledImage({
         tileSource: "niv1.1.dzi",
+
         x: 0.1825774438521488,
-        y: 0.3864,
+        y: 0.38635,
         width: 0.04332902059396895,
+
+        opacity: 0,
+        preload: true,
+
+        success: function(event){
+            detailImage = event.item;
+        }
     });
+
+});
+
+// Affichage selon le zoom
+viewer.addHandler('animation', function(){
+
+    if(!detailImage) return;
+
+    let zoom = viewer.viewport.getZoom(true);
+
+    // 🔧 Ajuste cette valeur si besoin
+    let threshold = 2.2;
+
+    if(zoom > threshold){
+        detailImage.setOpacity(1);
+    } else {
+        detailImage.setOpacity(0);
+    }
 
 });
 </script>
 
 </body>
 </html>
+
 
