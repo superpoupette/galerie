@@ -53,13 +53,15 @@ viewer.addHandler('open', function(){
         }
     });
 
-    // ⭐ Tuile 2
+    // Tuile 2
     viewer.addTiledImage({
         tileSource: "croquis1.dzi",
         x: 0,
         y: 0,
-        width: 0.5,
-        opacity: 0,
+        width: 1,
+
+        opacity: 1,
+        index: 999,
         preload: true,
 
         success: function(event){
