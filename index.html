@@ -7,8 +7,16 @@
 <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
 
 <style>
-html, body { margin:0; height:100%; }
-#viewer { width:100%; height:100vh; background:black; }
+html, body {
+    margin:0;
+    height:100%;
+}
+
+#viewer {
+    width:100%;
+    height:100vh;
+    background:black;
+}
 </style>
 </head>
 
@@ -27,60 +35,95 @@ var viewer = OpenSeadragon({
 
 let charlieTile = null;
 let croquisTile = null;
+let croquis2Tile = null;
 
+
+// =========================
+// AJOUT DES TUILES
+// =========================
 viewer.addHandler('open', function(){
 
+    // --- Charlie ---
     viewer.addTiledImage({
         tileSource: "charlie1.dzi",
         x: 0.2891011294986858,
         y: 0.3041,
         width: 0.01957575572620729,
-        height: 0.022303030672940538,
         opacity: 0,
         preload: true,
         success: e => charlieTile = e.item
     });
 
+    // --- Croquis 1 ---
     viewer.addTiledImage({
         tileSource: "croquis1.dzi",
         x: 0.4372275814493661,
         y: 0.5235,
         width: 0.16669895742216728,
-        height: 0.14485691959151004,
         opacity: 0,
         preload: true,
         success: e => croquisTile = e.item
     });
 
+    // --- Croquis 2 (dans Croquis1) ---
+    viewer.addTiledImage({
+        tileSource: "croquis2.dzi",
+        x: 0.5421047022556403,
+        y: 0.5789552937815793,
+        width: 0.002798228046620041,
+        opacity: 0,
+        preload: true,
+        success: e => croquis2Tile = e.item
+    });
+
 });
 
 
-//  Gestion du zoom
+// =========================
+// FADE SELON ZOOM
+// =========================
 viewer.addHandler('animation', function(){
 
     let zoom = viewer.viewport.getZoom(true);
 
-    // Zones d'apparition (ajuste si besoin)
-    let startFade = 1.5;
-    let endFade   = 2.2;
+    // -------- Niveau 1 --------
+    let start1 = 1.5;
+    let end1   = 2.2;
 
-    let opacity;
+    let opacity1;
 
-    if(zoom <= startFade)
-        opacity = 0;
-    else if(zoom >= endFade)
-        opacity = 1;
+    if(zoom <= start1)
+        opacity1 = 0;
+    else if(zoom >= end1)
+        opacity1 = 1;
     else
-        opacity = (zoom - startFade) / (endFade - startFade);
+        opacity1 = (zoom - start1) / (end1 - start1);
 
-    if(charlieTile) charlieTile.setOpacity(opacity);
-    if(croquisTile) croquisTile.setOpacity(opacity);
+    if(charlieTile) charlieTile.setOpacity(opacity1);
+    if(croquisTile) croquisTile.setOpacity(opacity1);
+
+
+    // -------- Niveau 2 (plus profond) --------
+    let start2 = 2.1;
+    let end2   = 2.8;
+
+    let opacity2;
+
+    if(zoom <= start2)
+        opacity2 = 0;
+    else if(zoom >= end2)
+        opacity2 = 1;
+    else
+        opacity2 = (zoom - start2) / (end2 - start2);
+
+    if(croquis2Tile) croquis2Tile.setOpacity(opacity2);
 
 });
 
 </script>
 </body>
 </html>
+
 
 
 
