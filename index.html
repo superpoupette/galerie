@@ -1,23 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Viewer</title>
+<meta charset="utf-8">
+<title>Viewer</title>
 
-    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+<script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
 
-    <style>
-        html, body {
-            margin: 0;
-            height: 100%;
-        }
-
-        #viewer {
-            width: 100%;
-            height: 100vh;
-            background: black;
-        }
-    </style>
+<style>
+html, body { margin:0; height:100%; }
+#viewer { width:100%; height:100vh; background:black; }
+</style>
 </head>
 
 <body>
@@ -33,39 +25,63 @@ var viewer = OpenSeadragon({
     showNavigator: false
 });
 
+let charlieTile = null;
+let croquisTile = null;
 
 viewer.addHandler('open', function(){
 
-    // Tuile charlie
     viewer.addTiledImage({
         tileSource: "charlie1.dzi",
         x: 0.2891011294986858,
         y: 0.3041,
         width: 0.01957575572620729,
         height: 0.022303030672940538,
-        opacity: 1,
+        opacity: 0,
         preload: true,
-
+        success: e => charlieTile = e.item
     });
 
-
-    // Tuile croquis
     viewer.addTiledImage({
         tileSource: "croquis1.dzi",
         x: 0.4372275814493661,
         y: 0.5235,
         width: 0.16669895742216728,
         height: 0.14485691959151004,
-        opacity: 0.6,
+        opacity: 0,
         preload: true,
-
+        success: e => croquisTile = e.item
     });
+
+});
+
+
+//  Gestion du zoom
+viewer.addHandler('animation', function(){
+
+    let zoom = viewer.viewport.getZoom(true);
+
+    // Zones d'apparition (ajuste si besoin)
+    let startFade = 1.5;
+    let endFade   = 2.2;
+
+    let opacity;
+
+    if(zoom <= startFade)
+        opacity = 0;
+    else if(zoom >= endFade)
+        opacity = 1;
+    else
+        opacity = (zoom - startFade) / (endFade - startFade);
+
+    if(charlieTile) charlieTile.setOpacity(opacity);
+    if(croquisTile) croquisTile.setOpacity(opacity);
 
 });
 
 </script>
 </body>
 </html>
+
 
 
 
