@@ -1,4 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Viewer</title>
+
+    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100vh;
+            background: black;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="viewer"></div>
+
 <script>
+
 var viewer = OpenSeadragon({
     id: "viewer",
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
@@ -6,71 +33,44 @@ var viewer = OpenSeadragon({
     showNavigator: false
 });
 
-let charlieTile = null;
-let croquisTile = null;
 
-// Ajout des tuiles
 viewer.addHandler('open', function(){
 
+    console.log("Viewer prêt");
+
+    // Tuile charlie
     viewer.addTiledImage({
         tileSource: "charlie1.dzi",
         x: 0.2891011294986858,
         y: 0.3041,
         width: 0.01957575572620729,
         height: 0.022303030672940538,
-        opacity: 0,
+        opacity: 1,
         preload: true,
 
-        success: function(event){
-            charlieTile = event.item;
-        }
+        success: () => console.log("Charlie OK")
     });
 
+
+    // Tuile croquis
     viewer.addTiledImage({
         tileSource: "croquis1.dzi",
         x: 0.4372275814493661,
         y: 0.8375559286446002,
         width: 0.16669895742216728,
         height: 0.14485691959151004,
-
-        opacity: 0,
+        opacity: 1,
         preload: true,
-        immediateRender: true,
-        blendTime: 0.5,
 
-        success: function(event){
-            croquisTile = event.item;
-        }
+        success: () => console.log("Croquis OK")
     });
 
 });
 
-
-// Fade progressif
-viewer.addHandler('animation', function(){
-
-    let zoom = viewer.viewport.getZoom(true);
-
-    let startFade = 1.6;
-    let endFade   = 2.1;
-
-    let opacity;
-
-    if(zoom <= startFade){
-        opacity = 0;
-    }
-    else if(zoom >= endFade){
-        opacity = 1;
-    }
-    else{
-        opacity = (zoom - startFade) / (endFade - startFade);
-    }
-
-    if(charlieTile) charlieTile.setOpacity(opacity);
-    if(croquisTile) croquisTile.setOpacity(opacity);
-
-});
 </script>
+</body>
+</html>
+
 
 
 
